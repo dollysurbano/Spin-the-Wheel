@@ -1,0 +1,404 @@
+using System;
+using System.ComponentModel.Design;
+using System.Collections.Generic;
+
+
+namespace final
+{
+	class Program
+	{
+		public static void Main(string[] args)
+		{
+        	Console.Title = "Spin The Wheel";
+        	
+			// Set the width and height of the console window dynamically
+			int desiredWidth = 120;
+			int desiredHeight = 30;
+
+			Console.WindowWidth = Math.Min(desiredWidth, Console.LargestWindowWidth);
+			Console.WindowHeight = Math.Min(desiredHeight, Console.LargestWindowHeight);
+
+			// Create a new instance of the Game class and start the game
+		    Game game = new Game();
+            game.Start();
+		
+		}
+	}
+
+    class Game
+    {
+        public void Start()
+        {
+        	RunMainMenu();
+        	Console.Clear();
+        }
+        private void RunMainMenu()
+        {
+        	// Display the main menu and handle user input
+        	string prompt = @"
+	███████╗██████╗ ██╗███╗   ██╗    ████████╗██╗  ██╗███████╗    ██╗    ██╗██╗  ██╗███████╗███████╗██╗
+	██╔════╝██╔══██╗██║████╗  ██║    ╚══██╔══╝██║  ██║██╔════╝    ██║    ██║██║  ██║██╔════╝██╔════╝██║     
+	███████╗██████╔╝██║██╔██╗ ██║       ██║   ███████║█████╗      ██║ █╗ ██║███████║█████╗  █████╗  ██║     
+	╚════██║██╔═══╝ ██║██║╚██╗██║       ██║   ██╔══██║██╔══╝      ██║███╗██║██╔══██║██╔══╝  ██╔══╝  ██║     
+	███████║██║     ██║██║ ╚████║       ██║   ██║  ██║███████╗    ╚███╔███╔╝██║  ██║███████╗███████╗███████╗
+	╚══════╝╚═╝     ╚═╝╚═╝  ╚═══╝       ╚═╝   ╚═╝  ╚═╝╚══════╝     ╚══╝╚══╝ ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+			╔═══════════════════════════════════════════════════════════╗
+			║            Welcome to the Wheel of Fortune!               ║
+			╠═══════════════════════════════════════════════════════════╣
+			║              What would you like to do?                   ║
+			║ (Use arrow keys to navigate or A(Up) and B(Down) buttons) ║
+			╠═══════════════════════════════════════════════════════════╣";
+        	string [] options = {"Play","About","Exit"};
+        	
+        	Menu mainMenu = new Menu(prompt, options);
+        	
+        	
+        	do
+    		{
+        		// Get the selected index from the menu
+        		int selectedIndex = mainMenu.Run();
+        		Console.Clear();
+        	
+        		// Execute the corresponding action based on the user's choice
+        		switch (selectedIndex) 
+        		{
+        			case 0:
+        				RunFirstChoice();
+        				break;
+        			case 1:
+        				DisplayAboutInfo();
+        				break;
+        			case 2:
+        				ExitGame();
+        				return; // Exit the method and the loop if the user chooses to exit
+        		} 
+        	
+      			// Ask the user if they want to restart the program
+        		if (!AskToRestartProgram())
+        		{
+            		ExitGame(); // Call ExitGame if the user chooses not to restart
+            		return;     // Exit the method and the loop
+        		}
+
+        		// Clear console for a new session
+        		Console.Clear();
+    		} while (true);
+}
+
+		private bool AskToRestartProgram()
+		{
+    		do
+    		{
+        		Console.Write("\nDo you want to restart the program? (yes/no): ");
+        		string userInput = Console.ReadLine().Trim().ToLower();
+
+        		if (userInput == "yes")
+        		{
+            		Console.WriteLine("Restarting program...");
+            		System.Threading.Thread.Sleep(1500);
+            		return true; // User wants to use the program again
+        		}
+        		else if (userInput == "no")
+        		{
+            		Console.WriteLine("Exiting program...");
+            		System.Threading.Thread.Sleep(1500);
+            		return false; // User does not want to use the program again
+        		}
+        		else
+        		{
+            		Console.WriteLine("Invalid input. Please enter only 'yes' or 'no'.");
+        		}
+    		} while (true);
+		}
+		
+    
+        
+        private void ExitGame()
+        {
+        	Console.BackgroundColor = ConsoleColor.Gray; // Set your desired background color
+        	Console.Clear(); // Clears the console with the chosen background color
+
+        	//thank you message
+        	Console.ForegroundColor = ConsoleColor.DarkMagenta;
+        	Console.WriteLine(new string('=', 120));
+        	Console.WriteLine("\n\t\t\t\t\t╔═══════════════════════════════════════╗");
+       		Console.WriteLine("\t\t\t\t\t║     Thank You for Using My Program!   ║");
+			Console.WriteLine("\t\t\t\t\t║             See you again :)          ║");
+			Console.WriteLine("\t\t\t\t\t╚═══════════════════════════════════════╝\n\n");
+   			Console.WriteLine(new string('=', 120));
+
+        	Console.ForegroundColor = ConsoleColor.Yellow;
+       		Console.WriteLine("\nPress any key to exit...");
+
+        	Console.ResetColor(); // Reset text color
+        	Console.ReadKey();
+        	Environment.Exit(0);
+        }
+        
+        private void DisplayAboutInfo()
+        {
+        	// Display information about the program and program's creator, and return to the main menu
+        	Console.Clear();
+        	
+        	Console.BackgroundColor = ConsoleColor.White;
+        	Console.Clear();
+        	Console.ForegroundColor = ConsoleColor.DarkBlue;
+        	
+        	Console.WriteLine(@"
+		  ___  _                 _     _   _           ______                                    
+		 / _ \| |               | |   | | | |          | ___ \                                   
+		/ /_\ \ |__   ___  _   _| |_  | |_| |__   ___  | |_/ / __ ___   __ _ _ __ __ _ _ __ ___  
+		|  _  | '_ \ / _ \| | | | __| | __| '_ \ / _ \ |  __/ '__/ _ \ / _` | '__/ _` | '_ ` _ \ 
+		| | | | |_) | (_) | |_| | |_  | |_| | | |  __/ | |  | | | (_) | (_| | | | (_| | | | | | |
+		\_| |_/_.__/ \___/ \__,_|\__|  \__|_| |_|\___| \_|  |_|  \___/ \__, |_|  \__,_|_| |_| |_|
+		                                                                __/ |                    
+		                                                               |___/                     ");
+        	Console.WriteLine("Welcome to the Wheel of Fortune!");
+    		Console.WriteLine("Version: 1.0");
+    		Console.WriteLine("Creator: Dolly Jean P. Surbano");
+    		Console.WriteLine("\nDescription:");
+    		Console.WriteLine(@"Wheel of Fortune Console Game provides an immersive experience where players use the arrow keys or A/B buttons to 
+navigate a nice visual main menu. The main activity of the event is a suspenseful spinning wheel, where winners are
+chosen at random from a pool of selected players. A user-friendly console interface ensures that the game plays
+seamlessly, from player registration to determining the number of participants and winners. With a well-organized
+layout of console windows and captivating graphics, the Wheel of Fortune program offers an entertaining
+and interactive experience.");
+    		Console.WriteLine("\nInstructions:");
+    		Console.WriteLine("1. Navigate the main menu using arrow keys or A (Up) and B (Down) buttons.");
+    		Console.WriteLine("2. Select 'Play' to spin the wheel and choose winners from a list of players.");
+    		Console.WriteLine("3. Choose 'About' to learn more about the program and its creator.");
+    		Console.WriteLine("4. Select 'Exit' to close the program.");
+    		Console.WriteLine("\nGet ready to spin, win, and experience the thrill of the Wheel of Fortune Game!");
+        	Console.ReadKey();
+        	Console.ResetColor();
+        	RunMainMenu();
+        }
+        
+        private void RunFirstChoice()
+        {	
+        	Random random = new Random(); // Declare the random object here
+        	
+        	// Clear console for a cleaner user experience
+    		Console.Clear();
+    
+        	// Get the number of players
+        	Console.Write("How many players do you have? ");
+        	int players = GetPositiveIntegerInput();
+
+        	// Get the number of winners
+        	Console.Write("How many winners do you need? ");
+       		int winners = GetPositiveIntegerInput();
+
+        	// Validate that there are enough players for the given number of winners
+        	while (winners >= players)
+        	{
+        		Console.ForegroundColor = ConsoleColor.Red;
+           		string longText = "Error: Number of winners cannot exceed the number of players or cannot be the same as the number of players.";
+           		int maxWidth = Console.WindowWidth - 1; // Adjust the width if you need
+
+        		for (int start = 0; start < longText.Length; start += maxWidth)
+        		{
+            		int length = Math.Min(maxWidth, longText.Length - start);
+            		string line = longText.Substring(start, length);
+            		Console.WriteLine(line);
+        		}
+           		Console.ResetColor();
+            	Console.Write("\nHow many winners do you need? ");
+            	winners = GetPositiveIntegerInput();
+        	}
+
+        	// Collect player names
+        	List<string> names = GetPlayerNames(players);
+
+        	Console.Clear();
+        	Console.ForegroundColor = ConsoleColor.DarkMagenta;
+        	Console.WriteLine(@"
+		    .  .   .                 ,      , .       .  .               *   __       .   | 
+		    |  | _ | _. _ ._ _  _   -+-_   -+-|_  _   |  |*._ ._  _ ._.__'  /  `*._._.| _ | 
+		    |/\|(/,|(_.(_)[ | )(/,   |(_)   | [ )(/,  |/\||[ )[ )(/,[ _)    \__.|[ (_.|(/,* 
+");
+        	Console.ResetColor();
+        	// Select and display winners sequentially
+        	for (int i = 0; i < winners; i++)
+       		{
+        		SpinAnimation();
+        		Console.ForegroundColor = ConsoleColor.Green;
+        		Console.SetCursorPosition((Console.WindowWidth - 29) / 2, Console.CursorTop);
+        		Console.WriteLine("+-----------------------------+");
+        		Console.SetCursorPosition((Console.WindowWidth - 29) / 2, Console.CursorTop);
+        		Console.WriteLine("|          Winner {0}:          |", i + 1);
+        		Console.SetCursorPosition((Console.WindowWidth - 29) / 2, Console.CursorTop);
+        		Console.WriteLine("+-----------------------------+");
+
+            	
+            	 // Ensure not picking the same winner twice
+        		int selectedIndex = random.Next(0, names.Count);
+        		string selectedWinner = names[selectedIndex]	;
+        		names.RemoveAt(selectedIndex);
+				
+        		Console.SetCursorPosition((Console.WindowWidth - selectedWinner.Length) / 2, Console.CursorTop);
+		        Console.ForegroundColor = ConsoleColor.Yellow;
+		        Console.SetCursorPosition((Console.WindowWidth - 29) / 2, Console.CursorTop);
+        		Console.WriteLine("|    Congratulations to {0}!  |", selectedWinner);
+        		Console.SetCursorPosition((Console.WindowWidth - 29) / 2, Console.CursorTop);
+        		Console.WriteLine("+-----------------------------+\n");
+        		Console.ResetColor();
+        	}
+        	Console.ForegroundColor = ConsoleColor.DarkMagenta;
+			Console.SetCursorPosition((Console.WindowWidth - 26) / 2, Console.CursorTop);
+			Console.WriteLine("Thank you for participating!");
+			Console.SetCursorPosition((Console.WindowWidth - 34) / 2, Console.CursorTop);
+			Console.WriteLine("Check back for more exciting events!");
+        	Console.ReadKey();
+        	Console.ResetColor();
+    	}
+		
+        // Helper method to get a positive integer input from the user
+    	static int GetPositiveIntegerInput()
+    	{
+        	int result;
+    		while (true)
+    		{
+        		string input = Console.ReadLine();
+        		if (int.TryParse(input, out result) && result > 0)
+        		{
+            		return result;
+        		}
+        		Console.ForegroundColor = ConsoleColor.Red;
+        		Console.WriteLine("Please enter a valid positive integer.");
+        		Console.ResetColor();
+        		Console.Write("Try again: ");
+    		}
+    	}
+
+    	// Helper method to get player names from the user
+    	static List<string> GetPlayerNames(int count)
+    	{
+        	List<string> names = new List<string>();
+        	for (int i = 0; i < count; i++)
+        	{
+        		string playerName;
+        		do
+        		{
+            		Console.Write("Enter player {0}'s name: ", i + 1);
+					playerName = Console.ReadLine().Trim();
+
+            			if (string.IsNullOrWhiteSpace(playerName))// Check if the name is empty
+            			{
+            				Console.ForegroundColor = ConsoleColor.Red;
+                			Console.WriteLine("Error: Player name cannot be empty.\n");
+                			Console.ResetColor();
+            			}
+            			else if (names.Contains(playerName))// Check if the name is already in the list
+            			{
+            				Console.ForegroundColor = ConsoleColor.Red;
+                			Console.WriteLine("Error: This name is already entered. Please choose a different name.\n");
+                			Console.ResetColor();
+            			}
+        		} while (string.IsNullOrWhiteSpace(playerName) || names.Contains(playerName));
+        		
+        		names.Add(playerName);
+        	}
+        	return names;
+    	}
+
+    	// Helper method to display a spinning animation
+    	static void SpinAnimation()
+    	{
+        	string[] spinners = { "|", "/", "-", "\\" };
+        	Console.CursorVisible = false;
+
+    		for (int i = 0; i < 10; i++)
+    		{
+        		foreach (string spinner in spinners)
+        		{
+            		Console.Write("Spinning\r" + spinner);
+            		System.Threading.Thread.Sleep(100);
+        		}
+    		}
+    		Console.CursorVisible = true;
+    	}
+    }
+   
+	// Class representing a menu with options    	
+    class Menu
+    {
+    	private int SelectedIndex;
+    	private string[] Options;
+    	private string Prompt;
+    	
+    	// Constructor to initialize the menu
+    	public Menu(string prompt, string[] options)
+    	{
+    		Prompt = prompt;
+    		Options = options;
+    		SelectedIndex = 0;
+    	}
+    	
+    	// Display menu options and handle user input
+    	private void DisplayOptions()
+    	{
+    		
+    		Console.WriteLine(Prompt);
+    		for (int i = 0; i < Options.Length; i++) 
+    		{
+    			string currentOptions = Options[i];
+    			string prefix = "\t\t\t\t\t\t*";
+    			
+    			if (i == SelectedIndex) 
+    			{
+    				Console.Write(prefix);
+    				Console.ForegroundColor = ConsoleColor.Black;
+    				Console.BackgroundColor = ConsoleColor.White;
+    			}
+    			else
+    			{
+    				Console.Write("\t\t\t\t\t\t");
+    				Console.ForegroundColor = ConsoleColor.White;
+    				Console.BackgroundColor = ConsoleColor.Black;
+    			}
+    			
+    			Console.WriteLine("  << " + currentOptions + " >>");
+    			Console.ResetColor();
+    		}
+    		Console.ResetColor();
+    	}
+    	
+    	// Run the menu and return the selected index
+    	public int Run()
+    	{
+    		ConsoleKey keyPressed;
+    		do
+    		{
+    			Console.Clear();
+    			DisplayOptions();
+    			
+    			ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+    			keyPressed = keyInfo.Key;
+    			
+    			//Arrow keys to use to run the program.
+    			if (keyPressed == ConsoleKey.UpArrow || keyPressed == ConsoleKey.A)
+    			{
+    				SelectedIndex--;
+    				if (SelectedIndex == -1)
+    				{
+    					SelectedIndex = Options.Length - 1;
+    				}
+    			}
+    			else if (keyPressed == ConsoleKey.DownArrow || keyPressed == ConsoleKey.B) 
+    			{
+    				SelectedIndex++;
+    				if (SelectedIndex == Options.Length)
+    				{
+    					SelectedIndex = 0;
+    				}
+    			}
+    		} while (keyPressed != ConsoleKey.Enter);
+    		
+    		return SelectedIndex;
+    	}
+    	
+    	}
+    }
+
+
