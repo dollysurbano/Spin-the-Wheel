@@ -269,7 +269,7 @@ and interactive experience.");
         		Console.ForegroundColor = ConsoleColor.Red;
         		Console.WriteLine("Please enter a valid positive integer.");
         		Console.ResetColor();
-        		Console.Write("Try again: \n");
+        		Console.Write("\nTry again: ");
     		}
     	}
 
