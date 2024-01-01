@@ -106,7 +106,9 @@ namespace final
         		}
         		else
         		{
+        			Console.ForegroundColor = ConsoleColor.Red;
             		Console.WriteLine("Invalid input. Please enter only 'yes' or 'no'.");
+            		Console.ResetColor();
         		}
     		} while (true);
 		}
@@ -267,7 +269,7 @@ and interactive experience.");
         		Console.ForegroundColor = ConsoleColor.Red;
         		Console.WriteLine("Please enter a valid positive integer.");
         		Console.ResetColor();
-        		Console.Write("Try again: ");
+        		Console.Write("Try again: \n");
     		}
     	}
 
